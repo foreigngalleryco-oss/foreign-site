@@ -4,7 +4,13 @@ import { requirePermission } from "@/lib/auth";
 import { ensureDefaultRbac } from "@/lib/rbac";
 import { isValidPhone, normalizePhone } from "@/lib/phone";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json({ error: "Server database is not configured." }, { status: 500 });
+  }
+
   const user = await requirePermission("view_admin");
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -45,6 +51,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json({ error: "Server database is not configured." }, { status: 500 });
+  }
+
   const user = await requirePermission("manage_roles");
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -91,6 +101,10 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json({ error: "Server database is not configured." }, { status: 500 });
+  }
+
   const user = await requirePermission("manage_roles");
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
