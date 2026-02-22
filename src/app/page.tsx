@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { StoreGate } from "@/components/StoreGate";
 import { formatUsd, getAllProducts } from "@/lib/products";
 import { hasStoreAccess } from "@/lib/store-access";
