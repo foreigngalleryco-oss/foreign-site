@@ -79,6 +79,8 @@ model WaitlistSignup {
   id        String   @id @default(cuid())
   email     String?
   phone     String?
+  consent   Boolean
+  consentText String?
   source    String
   createdAt DateTime @default(now())
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -7,6 +8,7 @@ export function StoreGate() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [consent, setConsent] = useState(false);
   const [unlockStatus, setUnlockStatus] = useState<string>("");
   const [unlockError, setUnlockError] = useState<string>("");
   const [smsStatus, setSmsStatus] = useState<string>("");
@@ -44,7 +46,7 @@ export function StoreGate() {
     const response = await fetch("/api/waitlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone, source: "gate-sms" })
+      body: JSON.stringify({ phone, source: "gate-sms", consent })
     });
 
     const data = await response.json();
@@ -56,6 +58,7 @@ export function StoreGate() {
 
     setSmsStatus("You are signed up.");
     setPhone("");
+    setConsent(false);
   }
 
   return (
@@ -87,7 +90,14 @@ export function StoreGate() {
         {unlockError ? <p className="status error">{unlockError}</p> : null}
 
         <div className="form-spacing">
-          <p>Sign up to be notified about drops.</p>
+          <p>Sign up for drop updates with links to new releases.</p>
+          <p className="consent-copy">
+            Verification codes are separate and will never include drop links. See the latest updates on{" "}
+            <Link href="/drops" className="text-link">
+              /drops
+            </Link>
+            .
+          </p>
           <form onSubmit={signUpSms} className="form-stack">
             <label htmlFor="sms-phone">Phone Number</label>
             <input
@@ -98,6 +108,15 @@ export function StoreGate() {
               onChange={(event) => setPhone(event.target.value)}
               placeholder="+1 555 555 0100"
             />
+            <label htmlFor="sms-consent" className="consent-label">
+              <input
+                id="sms-consent"
+                type="checkbox"
+                checked={consent}
+                onChange={(event) => setConsent(event.target.checked)}
+              />
+              I agree to receive SMS updates about new drops and release links. Verification codes are sent separately and never include drop links.
+            </label>
             <button type="submit" className="secondary">
               Sign Up for SMS
             </button>

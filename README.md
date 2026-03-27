@@ -12,8 +12,8 @@ A gallery-style clothing storefront modeled after a password-gated weekend-drop 
 
 ## Stack
 - Next.js (App Router) + TypeScript
-- Prisma + SQLite
-- Twilio SMS API (fallback mock logging if credentials are empty)
+- Prisma + PostgreSQL
+- Twilio SMS API for verification codes (fallback mock logging if credentials are empty)
 
 ## Setup
 1. Install Node.js 20+.
@@ -51,6 +51,7 @@ Optional for real SMS:
 
 ## Routes
 - `/` password gate (or storefront if unlocked)
+- `/drops`
 - `/collections/all`
 - `/products/jump-the-line`
 - `/cart`
@@ -60,5 +61,7 @@ Optional for real SMS:
 
 ## Notes
 - Without Twilio credentials in development, OTP is logged and returned as `debugCode` by auth API.
+- Drop-update signups now require explicit SMS consent and store that consent alongside the phone number.
+- After pulling these changes into production, run `npx prisma db push` against your production `DATABASE_URL` so the new waitlist consent fields exist.
 - Cart is client-side (`localStorage`) and intended as storefront behavior demo.
 - `Jump The Line` and other catalog items are defined in `src/lib/products.ts`.
